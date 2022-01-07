@@ -5,6 +5,7 @@ import PrimaryButton from "../components/primary-button";
 import Keyboard from "../components/keyboard";
 import abi from "../utils/Keyboards.json";
 import { useMetaMaskAccount } from "../components/meta-mask-account-provider";
+import getKeyboardsContract from "../utils/getKeyboardsContract";
 
 export default function Create() {
   const { ethereum, connectedAccount, connectAccount } = useMetaMaskAccount();
@@ -16,8 +17,6 @@ export default function Create() {
   const [mining, setMining] = useState(false);
 
   const keyboardsContract = getKeyboardsContract(ethereum);
-
-  useEffect(() => getConnectedAccount(), []);
 
   const submitCreate = async (e) => {
     e.preventDefault();
@@ -31,14 +30,6 @@ export default function Create() {
 
     setMining(true);
     try {
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();
-      const keyboardsContract = new ethers.Contract(
-        contractAddress,
-        contractABI,
-        signer
-      );
-
       const createTxn = await keyboardsContract.create(
         keyboardKind,
         isPBT,
